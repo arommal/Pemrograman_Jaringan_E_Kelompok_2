@@ -1,88 +1,190 @@
-from socket import AF_INET, socket, SOCK_STREAM
-from threading import Thread
-import tkinter
-from tkinter.constants import *
-from tkinter import filedialog
+import socket
+import tkinter as tk
 from tkinter import ttk
-from PIL import Image, ImageTk
-from tkinter.scrolledtext import ScrolledText
+from tkinter import filedialog
+import threading
+import time
+import os
 
-def receive():
-    """Handles receiving of messages."""
-    while True:
-        try:
-            msg = client_socket.recv(BUFSIZ).decode("utf8") + "\n"
-            msg_list.insert(tkinter.END, msg)
-        except OSError:  # Possibly client has left the chat.
+TARGET_HOST = "127.0.0.3"
+TARGET_PORT = 33000
+
+
+class GUI:
+    def __init__(self):
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.connect((TARGET_HOST, TARGET_PORT))
+
+        self.Window = tk.Tk()
+        self.Window.withdraw()
+
+        self.login = tk.Toplevel()
+
+        self.login.title("Login SChat")
+        self.login.resizable(width=False, height=False)
+        self.login.configure(width=400, height=400)
+
+        self.pls = tk.Label(self.login, text="Silakan Login ke Chatroom", justify=tk.CENTER, font="Helvetica 12 bold")
+
+        self.pls.place(relheight=0.15, relx=0.2, rely=0.07)
+
+        self.userLabelName = tk.Label(self.login, text="Username ", font="Helvetica 11")
+        self.userLabelName.place(relheight=0.2, relx=0.1, rely=0.25)
+
+        self.userEntryName = tk.Entry(self.login, font="Helvetica 11")
+        self.userEntryName.place(relwidth=0.4, relheight=0.1, relx=0.35, rely=0.3)
+        self.userEntryName.focus()
+
+        self.roomLabelName = tk.Label(self.login, text="Chatroom ID ", font="Helvetica 11")
+        self.roomLabelName.place(relheight=0.2, relx=0.1, rely=0.4)
+
+        self.roomEntryName = tk.Entry(self.login, font="Helvetica 11", show="*")
+        self.roomEntryName.place(relwidth=0.4, relheight=0.1, relx=0.35, rely=0.45)
+
+        self.go = tk.Button(self.login, text="LOGIN", font="Helvetica 12 bold",
+                            command=lambda: self.authenticate(self.userEntryName.get(), self.roomEntryName.get()))
+        self.go.place(relx=0.35, rely=0.62)
+
+        self.Window.mainloop()
+
+    def authenticate(self, username, room_id=0):
+        self.name = username
+        self.server.send(str.encode(username))
+        time.sleep(0.1)
+        self.server.send(str.encode(room_id))
+
+        self.login.destroy()
+        self.layout()
+
+        rcv = threading.Thread(target=self.receive)
+        rcv.start()
+
+    def layout(self):
+        self.Window.deiconify()
+        self.Window.title("Chatroom")
+        self.Window.resizable(width=False, height=False)
+        self.Window.configure(width=400, height=600, bg="#ebebeb")
+
+        self.textCons = tk.Text(self.Window, width=20, height=2, bg="#17202A", fg="#EAECEE", padx=5, pady=5,
+                                font="Helvetica 11")
+        self.textCons.place(relheight=0.745, relwidth=1, rely=0.08)
+        self.textCons.config(cursor="arrow")
+        scrollbar = tk.Scrollbar(self.textCons)
+        scrollbar.place(relheight=1, relx=0.974)
+        scrollbar.config(command=self.textCons.yview)
+        self.textCons.config(state=tk.DISABLED)
+
+        self.labelBottom = tk.Label(self.Window, bg="#ABB2B9", height=80)
+        self.labelBottom.place(relwidth=1, rely=0.8)
+
+        self.messageBox = tk.Entry(self.labelBottom, bg="#2C3E50", fg="#EAECEE", font="Helvetica 11")
+        self.messageBox.place(relwidth=0.74, relheight=0.03, rely=0.008, relx=0.011)
+        self.messageBox.focus()
+
+        self.textSendButton = tk.Button(self.labelBottom, text="Kirim", width=10, bg="#ABB2B9",
+                                        font="Helvetica 10 bold",
+                                        command=lambda: self.sendTextButton(self.messageBox.get()))
+        self.textSendButton.place(relx=0.77, rely=0.008, relheight=0.03, relwidth=0.22)
+
+        self.labelFile = tk.Label(self.Window, bg="#ABB2B9", height=70)
+        self.labelFile.place(relwidth=1, rely=0.9)
+
+        self.fileLocation = tk.Label(self.labelFile, text="Upload file", bg="#2C3E50", fg="#EAECEE",
+                                     font="Helvetica 11")
+        self.fileLocation.place(relwidth=0.65, relheight=0.03, rely=0.008, relx=0.011)
+
+        self.fileBrowseButton = tk.Button(self.labelFile, text="Cari", width=10, bg="#ABB2B9", font="Helvetica 10 bold",
+                                          command=self.browseFile)
+        self.fileBrowseButton.place(relx=0.67, rely=0.008, relheight=0.03, relwidth=0.15)
+
+        self.fileSendButton = tk.Button(self.labelFile, text="Kirim File", width=10, bg="#ABB2B9",
+                                        command=self.sendFile)
+        self.fileSendButton.place(relx=0.84, rely=0.008, relheight=0.03, relwidth=0.15)
+
+        self.fileName = ""
+
+    def browseFile(self):
+        self.fileName = filedialog.askopenfilename(initialdir="/",
+                                                   title="Pilih File",
+                                                   filetypes=(("Text files",
+                                                               "*.txt*"),
+                                                              ("all files",
+                                                               "*.*")))
+        self.fileLocation.configure(text="File Terbuka: " + self.fileName)
+
+    def sendFile(self):
+        self.server.send("FILE".encode())
+        time.sleep(0.1)
+        self.server.send(str("client_" + os.path.basename(self.fileName)).encode())
+        time.sleep(0.1)
+        self.server.send(str(os.path.getsize(self.fileName)).encode())
+        time.sleep(0.1)
+
+        file = open(self.fileName, "rb")
+        data = file.read(1024)
+        while data:
+            self.server.send(data)
+            data = file.read(1024)
+        self.textCons.config(state=tk.DISABLED)
+        self.textCons.config(state=tk.NORMAL)
+        self.textCons.insert(tk.END, "You | " + str(os.path.basename(self.fileName)) + " Terkirim\n\n")
+        self.textCons.config(state=tk.DISABLED)
+        self.textCons.see(tk.END)
+
+    def sendTextButton(self, message):
+        self.textCons.config(state=tk.DISABLED)
+        self.message = message
+        self.messageBox.delete(0, tk.END)
+        thread = threading.Thread(target=self.sendText)
+        thread.start()
+
+    def sendText(self):
+        self.textCons.config(state=tk.DISABLED)
+
+        while True:
+            self.server.send(self.message.encode())
+            self.textCons.config(state=tk.NORMAL)
+            self.textCons.insert(tk.END, "You | " + self.message + "\n\n")
+            self.textCons.config(state=tk.DISABLED)
+            self.textCons.see(tk.END)
             break
 
+    def receive(self):
+        while True:
+            try:
+                message = self.server.recv(1024).decode()
 
-def send(event=None):  # event is passed by binders.
-    """Handles sending of messages."""
-    msg = my_msg.get()
-    my_msg.set("")  # Clears input field.
-    client_socket.send(bytes(msg, "utf8"))
-    if msg == "{quit}":
-        client_socket.close()
-        top.quit()
+                if str(message) == "FILE":
+                    fileName = self.server.recv(1024).decode()
+                    fileLength = self.server.recv(1024).decode()
+                    sender = self.server.recv(1024).decode()
+
+                    if os.path.exists(fileName):
+                        os.remove(fileName)
+
+                    total = 0
+                    file = open(fileName, 'wb')
+
+                    while str(total) != fileLength:
+                        data = self.server.recv(1024)
+                        total += len(data)
+                        file.write(data)
+
+                    self.textCons.config(state=tk.DISABLED)
+                    self.textCons.config(state=tk.NORMAL)
+                    self.textCons.insert(tk.END, str(sender) + " | File " + fileName + " diterima\n\n")
+                    self.textCons.config(state=tk.DISABLED)
+                    self.textCons.see(tk.END)
+                else:
+                    self.textCons.config(state=tk.DISABLED)
+                    self.textCons.config(state=tk.NORMAL)
+                    self.textCons.insert(tk.END, message + "\n\n")
+                    self.textCons.config(state=tk.DISABLED)
+                    self.textCons.see(tk.END)
+            except:
+                self.server.close()
+                break
 
 
-def on_closing(event=None):
-    """This function is to be called when the window is closed."""
-    my_msg.set("{quit}")
-    send()
-
-def uploadImage(event=None):
-    filename = filedialog.askopenfilename()
-    img = Image.open(filename).resize((64, 64), Image.ANTIALIAS)
-    photo = ImageTk.PhotoImage(img)
-    msg_list.image_create(INSERT, padx=5, pady=5, image=photo)
-    msg_list.images.append(photo)
-
-
-top = tkinter.Tk()
-top.title("Chatter")
-
-messages_frame = tkinter.Frame(top)
-my_msg = tkinter.StringVar()  # For the messages to be sent.
-my_msg.set("Type your messages here.")
-scrollbar = tkinter.Scrollbar(messages_frame)  # To navigate through past messages.
-# Following will contain the messages.
-msg_list = ScrolledText(top, wrap=WORD, width=50, height=40)
-msg_list.grid(row=2, column=4, padx=10, pady=10)
-msg_list.images = []
-
-# scrollbar.pack(side=tkinter.RIGHT, fill=tkinter.Y)
-msg_list.pack(side=tkinter.LEFT, fill=tkinter.BOTH)
-msg_list.pack(padx=10, pady=10)
-messages_frame.pack()
-
-entry_field = tkinter.Entry(top, textvariable=my_msg)
-entry_field.bind("<Return>", send)
-entry_field.pack(padx=10, pady=10)
-button = tkinter.Button(top, text='Open', command=uploadImage)
-button.pack()
-send_button = tkinter.Button(top, text="Send", command=send)
-send_button.pack()
-
-top.protocol("WM_DELETE_WINDOW", on_closing)
-
-#----Now comes the sockets part----
-# HOST = input('Enter host: ')
-# PORT = input('Enter port: ')
-HOST = '127.0.0.1'
-PORT = 33000
-if not PORT:
-    PORT = 33000
-else:
-    PORT = int(PORT)
-
-BUFSIZ = 1024
-ADDR = (HOST, PORT)
-
-client_socket = socket(AF_INET, SOCK_STREAM)
-client_socket.connect(ADDR)
-
-receive_thread = Thread(target=receive)
-receive_thread.start()
-tkinter.mainloop()  # Starts GUI execution.
+if __name__ == "__main__":
+    gui = GUI()
