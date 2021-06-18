@@ -9,16 +9,17 @@ import os
 TARGET_HOST = "127.0.0.1"
 TARGET_PORT = 33000
 
+
 class GUI:
     def __init__(self):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.connect((TARGET_HOST, TARGET_PORT))
-        
+
         self.Window = tk.Tk()
         self.Window.withdraw()
-        
+
         self.login = tk.Toplevel()
-        
+
         self.login.title("Login SChat")
         self.login.resizable(width=False, height=False)
         self.login.configure(width=400, height=400)
@@ -40,7 +41,8 @@ class GUI:
         self.roomEntryName = tk.Entry(self.login, font="Helvetica 11", show="*")
         self.roomEntryName.place(relwidth=0.4, relheight=0.1, relx=0.35, rely=0.45)
 
-        self.go = tk.Button(self.login, text="LOGIN", font="Helvetica 12 bold", command=lambda: self.authenticate(self.userEntryName.get(), self.roomEntryName.get()))
+        self.go = tk.Button(self.login, text="LOGIN", font="Helvetica 12 bold",
+                            command=lambda: self.authenticate(self.userEntryName.get(), self.roomEntryName.get()))
         self.go.place(relx=0.35, rely=0.62)
 
         self.Window.mainloop()
@@ -63,7 +65,8 @@ class GUI:
         self.Window.resizable(width=False, height=False)
         self.Window.configure(width=400, height=600, bg="#ebebeb")
 
-        self.textCons = tk.Text(self.Window, width=20, height=2, bg="#17202A", fg="#EAECEE", padx=5, pady=5, font="Helvetica 11")
+        self.textCons = tk.Text(self.Window, width=20, height=2, bg="#17202A", fg="#EAECEE", padx=5, pady=5,
+                                font="Helvetica 11")
         self.textCons.place(relheight=0.745, relwidth=1, rely=0.08)
         self.textCons.config(cursor="arrow")
         scrollbar = tk.Scrollbar(self.textCons)
@@ -78,19 +81,24 @@ class GUI:
         self.messageBox.place(relwidth=0.74, relheight=0.03, rely=0.008, relx=0.011)
         self.messageBox.focus()
 
-        self.textSendButton = tk.Button(self.labelBottom, text = "Kirim", width=10, bg="#ABB2B9", font="Helvetica 10 bold", command=lambda : self.sendTextButton(self.messageBox.get()))
+        self.textSendButton = tk.Button(self.labelBottom, text="Kirim", width=10, bg="#ABB2B9",
+                                        font="Helvetica 10 bold",
+                                        command=lambda: self.sendTextButton(self.messageBox.get()))
         self.textSendButton.place(relx=0.77, rely=0.008, relheight=0.03, relwidth=0.22)
 
         self.labelFile = tk.Label(self.Window, bg="#ABB2B9", height=70)
         self.labelFile.place(relwidth=1, rely=0.9)
 
-        self.fileLocation = tk.Label(self.labelFile, text="Upload file", bg="#2C3E50", fg="#EAECEE", font="Helvetica 11")
+        self.fileLocation = tk.Label(self.labelFile, text="Upload file", bg="#2C3E50", fg="#EAECEE",
+                                     font="Helvetica 11")
         self.fileLocation.place(relwidth=0.65, relheight=0.03, rely=0.008, relx=0.011)
 
-        self.fileBrowseButton = tk.Button(self.labelFile, text="Cari", width=10, bg="#ABB2B9", font="Helvetica 10 bold", command=self.browseFile)
+        self.fileBrowseButton = tk.Button(self.labelFile, text="Cari", width=10, bg="#ABB2B9", font="Helvetica 10 bold",
+                                          command=self.browseFile)
         self.fileBrowseButton.place(relx=0.67, rely=0.008, relheight=0.03, relwidth=0.15)
 
-        self.fileSendButton = tk.Button(self.labelFile, text="Kirim File", width=10, bg="#ABB2B9", command=self.sendFile)
+        self.fileSendButton = tk.Button(self.labelFile, text="Kirim File", width=10, bg="#ABB2B9",
+                                        command=self.sendFile)
         self.fileSendButton.place(relx=0.84, rely=0.008, relheight=0.03, relwidth=0.15)
 
         self.fileName = ""
@@ -98,11 +106,11 @@ class GUI:
     def browseFile(self):
         self.fileName = filedialog.askopenfilename(initialdir="/",
                                                    title="Pilih File",
-                                                   filetypes = (("Text files",
-                                                                 "*.txt*"),
-                                                                ("all files",
-                                                                 "*.*")))
-        self.fileLocation.configure(text="File Terbuka: "+ self.fileName)
+                                                   filetypes=(("Text files",
+                                                               "*.txt*"),
+                                                              ("all files",
+                                                               "*.*")))
+        self.fileLocation.configure(text="File Terbuka: " + self.fileName)
 
     def sendFile(self):
         self.server.send("FILE".encode())
@@ -112,7 +120,7 @@ class GUI:
         self.server.send(str(os.path.getsize(self.fileName)).encode())
         time.sleep(0.1)
 
-        file = open(self.fileName,"rb")
+        file = open(self.fileName, "rb")
         data = file.read(1024)
         while data:
             self.server.send(data)
@@ -122,7 +130,7 @@ class GUI:
         self.textCons.insert(tk.END, "You | " + str(os.path.basename(self.fileName)) + " Terkirim\n\n")
         self.textCons.config(state=tk.DISABLED)
         self.textCons.see(tk.END)
-        
+
     def sendTextButton(self, message):
         self.textCons.config(state=tk.DISABLED)
         self.message = message
@@ -131,13 +139,13 @@ class GUI:
         thread.start()
 
     def sendText(self):
-        self.textCons.config(state = tk.DISABLED)
+        self.textCons.config(state=tk.DISABLED)
 
         while True:
             self.server.send(self.message.encode())
-            self.textCons.config(state = tk.NORMAL)
+            self.textCons.config(state=tk.NORMAL)
             self.textCons.insert(tk.END, "You | " + self.message + "\n\n")
-            self.textCons.config(state = tk.DISABLED)
+            self.textCons.config(state=tk.DISABLED)
             self.textCons.see(tk.END)
             break
 
@@ -155,12 +163,11 @@ class GUI:
                         os.remove(fileName)
 
                     total = 0
-                    file = open(fileName, 'wb')
-
-                    while str(total) != fileLength:
-                        data = self.server.recv(1024)
-                        total += len(data)
-                        file.write(data)
+                    with open(fileName, 'wb') as file:
+                        while str(total) != fileLength:
+                            data = self.server.recv(1024)
+                            total = total + len(data)
+                            file.write(data)
 
                     self.textCons.config(state=tk.DISABLED)
                     self.textCons.config(state=tk.NORMAL)
