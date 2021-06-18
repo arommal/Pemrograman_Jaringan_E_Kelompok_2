@@ -163,12 +163,11 @@ class GUI:
                         os.remove(fileName)
 
                     total = 0
-                    file = open(fileName, 'wb')
-
-                    while str(total) != fileLength:
-                        data = self.server.recv(1024)
-                        total += len(data)
-                        file.write(data)
+                    with open(fileName, 'wb') as file:
+                        while str(total) != fileLength:
+                            data = self.server.recv(1024)
+                            total = total + len(data)
+                            file.write(data)
 
                     self.textCons.config(state=tk.DISABLED)
                     self.textCons.config(state=tk.NORMAL)
