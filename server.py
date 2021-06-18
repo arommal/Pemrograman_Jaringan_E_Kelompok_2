@@ -20,7 +20,6 @@ class Server:
             connection, address = self.server.accept()
             print(str(address[0]) + ":" + str(address[1]) + " Terhubung")
             Thread(target=self.handleClients, args=(connection,)).start()
-            # start_new_thread(self.handleClients(connection))
         self.server.close()
 
     def handleClients(self, connection):
