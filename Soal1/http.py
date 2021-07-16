@@ -5,6 +5,7 @@ from glob import glob, escape
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import unquote
+import re
 
 
 class HttpServer:
@@ -67,29 +68,37 @@ class HttpServer:
 
     def http_get(self, object_address, headers):
         object_address = unquote(object_address)
+
+        if (object_address == '/'):
+            return self.response(200, 'OK', 'Ini Adalah Web Server Percobaan', dict())
+
         print(f"ADDRESS : {object_address}")
-        files = glob('./*')
-        for i in range(0, len(files)):
-            files[i] = Path(files[i])
-        dir = Path('./')
-        return self.response(200, 'OK', 'Selamat Datang di Default Server', dict())
+        files = glob('./**/*')
+        for i in files:
+            print(i)
+        filename = '.' + object_address.replace("/", "\\")
+
+        if filename not in files:
+            return self.response(404, 'Not Found', '', {})
+
+        fp = open(filename, 'rb')
+        isi = fp.read()
+
+        fext = os.path.splitext(filename)[1]
+        content_type = self.types[fext]
+        headers = {}
+        headers['Content-type'] = content_type
+
+        return self.response(200, 'OK', isi, headers)
 
     def http_post(self, object_address, headers):
         headers = {}
         isi = "kosong"
         return self.response(200, 'OK', isi, headers)
 
-
-# >>> import os.path
-# >>> ext = os.path.splitext('/ak/52.png')
-
 if __name__ == "__main__":
     httpserver = HttpServer()
-    d = httpserver.proses('GET / HTTP/1.0')
+    # d = httpserver.proses('GET / HTTP/1.0')
+    # print(d)
+    d = httpserver.proses('GET /images/donalbebek.jpg HTTP/1.0')
     print(d)
-# d = httpserver.proses('GET donalbebek.jpg HTTP/1.0')
-# print(d)
-# d = httpserver.http_get('testing2.txt',{})
-# print(d)
-#	d = httpserver.http_get('testing.txt')
-#	print(d))
