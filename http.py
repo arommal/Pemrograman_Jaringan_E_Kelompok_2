@@ -40,7 +40,6 @@ class HttpServer:
         return response
 
     def proses(self, data):
-
         requests = data.split("\r\n")
         # print(requests)
 
@@ -48,28 +47,33 @@ class HttpServer:
         # print(baris)
 
         all_headers = [n for n in requests[1:] if n != '']
-
         j = baris.split(" ")
         try:
             method = j[0].upper().strip()
             if (method == 'GET'):
                 object_address = j[1].strip()
-                return self.http_get(object_address, all_headers)
+                object_address = object_address.split("/")
+                return self.http_get(object_address[1:], all_headers)
             if (method == 'POST'):
                 object_address = j[1].strip()
-                return self.http_post(object_address, all_headers)
+                object_address = object_address.split("/")
+                return self.http_post(object_address[1:], all_headers)
             else:
                 return self.response(400, 'Bad Request', '', {})
         except IndexError:
             return self.response(400, 'Bad Request', '', {})
 
     def http_get(self, object_address, headers):
-        files = glob('../**/*', recursive=True)
+        print(object_address)
+        files = glob('./**/*', recursive=True)
+        thedir = '.\\'
+        finpath = thedir + object_address[0] + "\\" + object_address[1]
+        print(finpath)
+
         print(files)
         if thedir + object_address not in files:
             return self.response(404, 'Not Found', '', {})
-        fp = open(thedir + object_address, 'rb')  # rb => artinya adalah read dalam bentuk binary
-        # harus membaca dalam bentuk byte dan BINARY
+        fp = open(thedir + object_address, 'rb')
         isi = fp.read()
 
         fext = os.path.splitext(thedir + object_address)[1]
@@ -93,7 +97,7 @@ if __name__ == "__main__":
     httpserver = HttpServer()
     # d = httpserver.proses('GET HTTP/1.0')
     # print(d)
-    d = httpserver.proses('GET testing.txt HTTP/1.0')
+    d = httpserver.proses('GET /pdf/rfc2616.pdf HTTP/1.0')
     print(d)
 # d = httpserver.http_get('testing2.txt')
 # print(d)
