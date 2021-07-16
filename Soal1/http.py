@@ -73,7 +73,7 @@ class HttpServer:
             return self.response(200, 'OK', 'Ini Adalah Web Server Percobaan', dict())
 
         print(f"ADDRESS : {object_address}")
-        files = glob('./**/*')
+        files = glob('.\images/*')
         for i in files:
             print(i)
         filename = '.' + object_address.replace("/", "\\")
