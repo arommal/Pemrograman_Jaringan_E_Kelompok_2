@@ -46,7 +46,7 @@ class ProcessTheClient(threading.Thread):
 
 
 class Server(threading.Thread):
-	def __init__(self, port=9000):
+	def __init__(self, port=8000):
 		self.my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.my_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		self.port = port
