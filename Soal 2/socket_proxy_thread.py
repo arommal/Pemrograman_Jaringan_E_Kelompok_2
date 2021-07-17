@@ -4,7 +4,7 @@ import threading
 import time
 import sys
 import logging
-from lb import LoadBalancer
+from load_balancer import LoadBalancer
 
 reverseProxy = LoadBalancer()
 
