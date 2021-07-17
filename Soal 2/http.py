@@ -5,7 +5,6 @@ from glob import glob, escape
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import unquote
-import re
 
 
 class HttpServer:
@@ -68,24 +67,25 @@ class HttpServer:
 
     def http_get(self, object_address, headers):
         object_address = unquote(object_address)
-
-        if (object_address == '/'):
-            return self.response(200, 'OK', 'Ini Adalah Web Server Percobaan', dict())
-
         print(f"ADDRESS : {object_address}")
-        files = glob('./**/*')
-        for i in files:
-            print(i)
-        filename = '.' + object_address.replace("/", "\\")
+        files = glob('./*.txt')
+        for i in range(0, len(files)):
+            files[i] = Path(files[i])
+        dir = Path('./')
+        if (object_address == '/'):
+            return self.response(200, 'OK', 'ini server http', dict())
 
-        if filename not in files:
+        object_address = object_address[1:]
+        print(dir / object_address)
+        if dir / object_address not in files:
             return self.response(404, 'Not Found', '', {})
-
-        fp = open(filename, 'rb')
+        fp = open(dir / object_address, 'rb')  # rb => artinya adalah read dalam bentuk binary
+        # harus membaca dalam bentuk byte dan BINARY
         isi = fp.read()
 
-        fext = os.path.splitext(filename)[1]
+        fext = os.path.splitext(dir / object_address)[1]
         content_type = self.types[fext]
+
         headers = {}
         headers['Content-type'] = content_type
 
@@ -96,9 +96,17 @@ class HttpServer:
         isi = "kosong"
         return self.response(200, 'OK', isi, headers)
 
+
+# >>> import os.path
+# >>> ext = os.path.splitext('/ak/52.png')
+
 if __name__ == "__main__":
     httpserver = HttpServer()
-    # d = httpserver.proses('GET / HTTP/1.0')
-    # print(d)
-    d = httpserver.proses('GET /images/pokijan.jpg HTTP/1.0')
+    d = httpserver.proses('GET / HTTP/1.0')
     print(d)
+# d = httpserver.proses('GET donalbebek.jpg HTTP/1.0')
+# print(d)
+# d = httpserver.http_get('testing2.txt',{})
+# print(d)
+#	d = httpserver.http_get('testing.txt')
+#	print(d)
