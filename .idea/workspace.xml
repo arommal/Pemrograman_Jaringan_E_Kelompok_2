@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2d17dbe8-e1b2-42a0-abea-5d973c5144ff" name="Default Changelist" comment="Try">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Soal 2/runserver.sh" beforeDir="false" afterPath="$PROJECT_DIR$/Soal 2/runserver.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Soal 2/socket_proxy_thread.py" beforeDir="false" afterPath="$PROJECT_DIR$/Soal 2/socket_proxy_thread.py" afterDir="false" />
-    </list>
+    <list default="true" id="2d17dbe8-e1b2-42a0-abea-5d973c5144ff" name="Default Changelist" comment="Try" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -145,8 +141,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Shell Script.runserver.sh" />
-        <item itemvalue="Python.server_thread_http" />
         <item itemvalue="Python.socket_proxy_thread" />
+        <item itemvalue="Python.server_thread_http" />
         <item itemvalue="Shell Script.runserver.sh (2)" />
         <item itemvalue="Python.load_balancer" />
       </list>
@@ -196,22 +192,22 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680@0.0.1280.680" timestamp="1626512103601" />
-    <state width="1259" height="143" key="GridCell.Tab.0.bottom" timestamp="1626515081641">
+    <state width="1259" height="143" key="GridCell.Tab.0.bottom" timestamp="1626515291968">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="143" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1626515081641" />
-    <state width="1259" height="143" key="GridCell.Tab.0.center" timestamp="1626515081640">
+    <state width="1259" height="143" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1626515291968" />
+    <state width="1259" height="143" key="GridCell.Tab.0.center" timestamp="1626515291967">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="143" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1626515081640" />
-    <state width="1259" height="143" key="GridCell.Tab.0.left" timestamp="1626515081640">
+    <state width="1259" height="143" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1626515291967" />
+    <state width="1259" height="143" key="GridCell.Tab.0.left" timestamp="1626515291967">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="143" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1626515081640" />
-    <state width="1259" height="143" key="GridCell.Tab.0.right" timestamp="1626515081641">
+    <state width="1259" height="143" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1626515291967" />
+    <state width="1259" height="143" key="GridCell.Tab.0.right" timestamp="1626515291968">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="143" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1626515081641" />
+    <state width="1259" height="143" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1626515291968" />
     <state x="337" y="165" key="com.intellij.ide.util.TipDialog" timestamp="1626514972400">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
