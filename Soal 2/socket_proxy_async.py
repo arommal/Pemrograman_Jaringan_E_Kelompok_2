@@ -55,7 +55,7 @@ class Server(asyncore.dispatcher):
 		self.bind(('', portnumber))
 		self.listen(5)
 		self.bservers = BackendList()
-		logging.warning("load balancer running on port {}" . format(portnumber))
+		logging.warning("Load balancer running on port {}" . format(portnumber))
 
 	def handle_accept(self):
 		pair = self.accept()
@@ -65,7 +65,7 @@ class Server(asyncore.dispatcher):
 
 			#menentukan ke server mana request akan diteruskan
 			bs = self.bservers.getserver()
-			logging.warning("koneksi dari {} diteruskan ke {}" . format(addr, bs))
+			logging.warning("Koneksi dari {} diteruskan ke {}" . format(addr, bs))
 			backend = Backend(bs)
 
 			#mendapatkan handler dan socket dari clients

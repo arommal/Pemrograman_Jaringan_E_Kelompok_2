@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2d17dbe8-e1b2-42a0-abea-5d973c5144ff" name="Default Changelist" comment="Try">
-      <change afterPath="$PROJECT_DIR$/Soal 2/runserver.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Soal 2/http.py" beforeDir="false" afterPath="$PROJECT_DIR$/Soal 2/http.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Soal 2/server_thread_http.py" beforeDir="false" afterPath="$PROJECT_DIR$/Soal 2/server_thread_http.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Soal 2/socket_proxy_async.py" beforeDir="false" afterPath="$PROJECT_DIR$/Soal 2/socket_proxy_async.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Soal 2/socket_proxy_thread.py" beforeDir="false" afterPath="$PROJECT_DIR$/Soal 2/socket_proxy_thread.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
