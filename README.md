@@ -1,6 +1,6 @@
 # Repository Kelompok 5 Pemrograman Jaringan E
 
-### Anggota
+### Anggota-anggota
 - Rosa Valentine Lammora (05111840000035)
 - Afia Hana Yusriya (05111840000111)
 - Salsabila Harlen (05111840000127)
